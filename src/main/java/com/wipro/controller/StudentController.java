@@ -19,9 +19,9 @@ import com.wipro.service.StudentService;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
+	
 	 @Autowired
 	 private final StudentService service;
-	 
 	 @Autowired
 	 private PasswordEncoder passwordEncoder;
 
