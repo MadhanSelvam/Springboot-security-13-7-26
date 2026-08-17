@@ -98,11 +98,6 @@
 		    <version>0.13.0</version>
 		    <scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>net.javaguides</groupId>
-			<artifactId>registration-login-system</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
