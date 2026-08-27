@@ -31,28 +31,28 @@ public class JwtFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		
-		String authHeader = request.getHeader("Authorization");
+		String authHeader = request.getHeader("Authorization");  //collecting the token
 		
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {  //checking it is valid token or not with the parameters
 			filterChain.doFilter(request, response);
 			return;
 		}
 		
-		String token = authHeader.substring(7);
+		String token = authHeader.substring(7);  //storing the token for further processing
 		
 		try {
-			String username = jwtUtil.extractUsername(token);
+			String username = jwtUtil.extractUsername(token);  //username extraction from payload
 			
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null ) {
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null ) {  //checks for username extracted successfully or not ,is user not already authenticated ?
 				
-				UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+				UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);   //spring loads username from DB
 				
 				if (jwtUtil.validateToken(token, userDetails)) {
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), 
 																												      userDetails.getPassword(), 
 																												      userDetails.getAuthorities());
 					
-					authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); //adds req info like IP address ,session ID,req details
 					
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 				}		
@@ -60,15 +60,15 @@ public class JwtFilter extends OncePerRequestFilter{
 			}
 		} catch (Exception e) {
 			
-			Map<String, String> responseMap = new HashMap<>();
-			responseMap.put("error", "Invalid Token");
+			Map<String, String> responseMap = new HashMap<>();   //creating an empty hashmap
+			responseMap.put("error", "Invalid Token");			 //preparing a response for postman
 			
-			ObjectMapper objectMapper = new ObjectMapper();
+			ObjectMapper objectMapper = new ObjectMapper(); //objectMapper is a Jackson class,converts java object into JSON and vice verssa ..
 			String jsonString = objectMapper.writeValueAsString(responseMap);
 			
-			response.getWriter().write(jsonString);
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			return;
+			response.getWriter().write(jsonString);			//used to return JSON into HTTP response
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);	//displays 401 error
+			return;											//stops further execution
 		}
 		
 		filterChain.doFilter(request, response);
