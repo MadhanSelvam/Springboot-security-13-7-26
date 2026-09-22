@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "management.metrices.export.datadog.api-key",
+  "type": "java.lang.String",
+  "description": "A description for 'management.metrices.export.datadog.api-key'"
+}]}
