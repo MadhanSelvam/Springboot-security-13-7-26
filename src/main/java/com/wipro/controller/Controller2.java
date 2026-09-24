@@ -17,7 +17,7 @@ public class Controller2 {
 	
 	@GetMapping("/dashboard")
 	public String getDashboard() {
-		return "Login success !!!!!!!!!!!!";
+		return "Login success !!!!!!!!!!!! & Finally deployed the application via jenkins !!!!!!!!!";
 	}
 	
 	
